@@ -1,0 +1,1631 @@
+{
+	"info": {
+		"_postman_id": "d453c221-2e27-4656-bf94-c344651fce90",
+		"name": "Group Project Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39050376"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Successfully Creates User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns correct object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.username).to.eql(\"testUser\");",
+									"    pm.expect(jsonData.type).to.eql(\"USER\");",
+									"    pm.expect(jsonData.password).to.eql(\"testPassword\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testUser\",\n    \"password\": \"testPassword\",\n    \"type\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Prevents Duplicate User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testUser\",\n    \"password\": \"anotherPassword\",\n    \"type\": \"MANAGER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User List Get Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of users\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(6);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns correct user data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.username).to.eql(\"testUser\");",
+									"    pm.expect(jsonData.type).to.eql(\"USER\");",
+									"    pm.expect(jsonData.password).to.eql(\"testPassword\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Update Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Successfully returns updated user data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.type).to.eql(\"ADMIN\");",
+									"    pm.expect(jsonData.password).not.to.eql(\"testPassword\");",
+									"    pm.expect(jsonData.password).to.eql(\"newPass\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testUser\",\n    \"password\": \"newPass\",\n    \"type\": \"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted User Gone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"No returned data\", function () {",
+									"    pm.response.body == null;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Update Fails",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testUser\",\n    \"password\": \"newerPass\",\n    \"type\": \"MANAGER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login/Registration",
+			"item": [
+				{
+					"name": "Successfully Login Candidate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User details are correct\", function () {",
+									"    const jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.user).to.have.property('username', 'alice');",
+									"    pm.expect(jsonResponse.userTypeObject).to.have.property('fullName', 'Alice Smith');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice\",\n    \"password\": \"alicepass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Login Candidate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unauthorized Login\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successfully Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User details are correct\", function () {",
+									"    const jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.user).to.have.property('username', 'adminuser');",
+									"    pm.expect(jsonResponse.user).to.have.property('type', 'ADMIN');",
+									"    pm.expect(jsonResponse.userTypeObject).to.be.null;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"adminuser\",\n    \"password\": \"adminpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successfully Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Registration successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User details are correct\", function () {",
+									"    const jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.username).to.eql(\"Regis\")",
+									"    pm.expect(jsonResponse.type).to.eql(\"ADMIN\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Regis\",\n    \"password\": \"regispass\",\n    \"type\":\"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Registration successful\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Regis\",\n    \"type\":\"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"registration"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Candidate",
+			"item": [
+				{
+					"name": "Create Candidate Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns correct object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fullName).to.eql(\"John Doe\");",
+									"    pm.expect(jsonData.email).to.eql(\"john.doe@example.com\");",
+									"    pm.expect(jsonData.address).to.eql(\"123 Main St\");",
+									"    pm.expect(jsonData.phone).to.eql(\"123-456-7890\");",
+									"    pm.expect(jsonData.resume).to.eql(\"This is a sample resume content.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"id\": 5\n  },\n  \"candidate\": {\n    \"fullName\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"address\": \"123 Main St\",\n    \"phone\": \"123-456-7890\",\n    \"resume\": \"This is a sample resume content.\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/candidates",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"candidates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Candidate Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Successfully returns updated candidate data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fullName).to.eql(\"Johnny Doe\");",
+									"    pm.expect(jsonData.email).to.eql(\"johnny.doe@example.com\");",
+									"    pm.expect(jsonData.address).to.eql(\"123 Main St\");",
+									"    pm.expect(jsonData.phone).to.eql(\"123-456-7890\");",
+									"     pm.expect(jsonData.resume).to.eql(\"This is a sample resume content.\");",
+									"    pm.expect(jsonData.firstApplicationDate).to.eql(\"2024-10-18T14:29:11.405970906\");",
+									"    ",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Johnny Doe\",\n    \"email\": \"johnny.doe@example.com\",\n    \"address\": \"123 Main St\",\n    \"phone\": \"123-456-7890\",\n    \"resume\": \"This is a sample resume content.\",\n    \"firstApplicationDate\": \"2024-10-18T14:29:11.405970906\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/candidates/4",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"candidates",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Candidate Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/candidates/4",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"candidates",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Candidate Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns correct candidate data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fullName).to.eql(\"John Doe\");",
+									"    pm.expect(jsonData.email).to.eql(\"johndoe@example.com\");",
+									"    pm.expect(jsonData.address).to.eql(\"123 Main St, Cityville\");",
+									"    pm.expect(jsonData.phone).to.eql(\"555-1234\");",
+									"    pm.expect(jsonData.resume).to.eql(\"John's resume content here.\");",
+									"",
+									"",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/candidates/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"candidates",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Candidates Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of candidates\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(3);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/candidates",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"candidates"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Job",
+			"item": [
+				{
+					"name": "Get All Jobs Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of jobs\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(5);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job By Id Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns correct job data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.manager.id).to.eql(1);",
+									"    pm.expect(jsonData.manager.department).to.eql(\"Human Resources\");",
+									"    pm.expect(jsonData.listingTitle).to.eql(\"HR Specialist\");",
+									"    pm.expect(jsonData.dateListed).to.eql(\"2024-02-01T11:00:00.000+00:00\");",
+									"    pm.expect(jsonData.dateClosed).to.eql(\"2024-02-01T12:00:00.000+00:00\");",
+									"    pm.expect(jsonData.jobTitle).to.eql(\"Human Resources Specialist\");",
+									"    pm.expect(jsonData.jobDescription).to.eql(\"Support HR functions, including recruitment, onboarding, and compliance with labor laws, while fostering a positive workplace culture.\");",
+									"    pm.expect(jsonData.additionalInformation).to.eql(\"Bachelor's degree in HR or related field preferred; strong communication skills and knowledge of employment laws required.\");",
+									"    pm.expect(jsonData.listingStatus).to.eql(\"Open\");",
+									"",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jobs For Manager Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of job for manager with id 2\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(2);",
+									"    pm.expect(data[0].manager.id).to.eql(2);",
+									"    pm.expect(data[0].listingTitle).to.eql(\"Software Engineer\");",
+									"    pm.expect(data[1].manager.id).to.eql(2);",
+									"    pm.expect(data[1].listingTitle).to.eql(\"Backend Developer\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs?id=2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Job Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns correct job object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(6);",
+									"    pm.expect(jsonData.manager.id).to.eql(2);",
+									"    pm.expect(jsonData.listingTitle).to.eql(\"UI & UX Designer\");",
+									"    pm.expect(jsonData.dateListed).to.eql(\"2024-01-15T10:00:00.000+00:00\");",
+									"    pm.expect(jsonData.dateClosed).to.eql(\"2024-01-15T10:00:00.000+00:00\");",
+									"    pm.expect(jsonData.jobTitle).to.eql(\"UI designer using Figma\");",
+									"    pm.expect(jsonData.jobDescription).to.eql(\"Responsible for designing brand new mobile applications.\");",
+									"    pm.expect(jsonData.additionalInformation).to.eql(\"Must have experience with Figma and Canva.\");",
+									"    pm.expect(jsonData.listingStatus).to.eql(\"Closed\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"manager\":{\n        \"id\":2\n    },\n\n    \"job\":{\n        \"listingTitle\": \"UI & UX Designer\",\n        \"dateListed\": \"2024-01-15T10:00:00.000+00:00\",\n        \"dateClosed\": \"2024-01-15T10:00:00.000+00:00\",\n        \"jobTitle\": \"UI designer using Figma\",\n        \"jobDescription\": \"Responsible for designing brand new mobile applications.\",\n        \"additionalInformation\": \"Must have experience with Figma and Canva.\",\n        \"listingStatus\": \"Closed\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/jobs",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Job Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Successfully returns updated job data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(1);",
+									"    pm.expect(jsonData.jobTitle).to.eql(\"UI designer using Paint\");",
+									"    pm.expect(jsonData.additionalInformation).to.eql(\"Must have experience with Paint.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"manager\":{\n        \"id\":2\n    },\n\n    \"job\":{\n        \"listingTitle\": \"UI Designer\",\n        \"dateListed\": \"2024-01-15T10:00:00.000+00:00\",\n        \"dateClosed\": \"2024-01-15T10:00:00.000+00:00\",\n        \"jobTitle\": \"UI designer using Paint\",\n        \"jobDescription\": \"Responsible for designing brand new mobile applications.\",\n        \"additionalInformation\": \"Must have experience with Paint.\",\n        \"listingStatus\": \"Closed\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/jobs/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Job Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Job Gone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"No returned data\", function () {",
+									"    pm.response.body == null;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs/6",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Manager",
+			"item": [
+				{
+					"name": "Create Manager Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns correct object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.id).to.eql(2);",
+									"    pm.expect(jsonData.fullName).to.eql(\"Jane Doe\");",
+									"    pm.expect(jsonData.email).to.eql(\"janedoe@example.com\");",
+									"    pm.expect(jsonData.department).to.eql(\"Human Resources\");",
+									"    pm.expect(jsonData.phone).to.eql(\"555-9889\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": {\n        \"id\": 2\n    },\n    \"manager\": {\n        \"fullName\": \"Jane Doe\",\n        \"email\": \"janedoe@example.com\",\n        \"department\": \"Human Resources\",\n        \"phone\": \"555-9889\"\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/manager",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"manager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Manager List Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of managers\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(3);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/manager",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"manager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns correct manager data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fullName).to.eql(\"Jane Doe\");",
+									"    pm.expect(jsonData.email).to.eql(\"janedoe@example.com\");",
+									"    pm.expect(jsonData.department).to.eql(\"Human Resources\");",
+									"    pm.expect(jsonData.phone).to.eql(\"555-9889\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/manager/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"manager",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Manager Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Successfully returns updated manager data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fullName).to.eql(\"Jane Smith\");",
+									"    pm.expect(jsonData.email).to.eql(\"janesmith@example.com\");",
+									"    pm.expect(jsonData.department).to.eql(\"Human Resources\");",
+									"    pm.expect(jsonData.phone).to.eql(\"555-9876\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Jane Smith\",\n    \"email\": \"janesmith@example.com\",\n    \"department\": \"Human Resources\",\n    \"phone\": \"555-9876\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/manager/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"manager",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Manager Succeeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/manager/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"manager",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Job applications",
+			"item": [
+				{
+					"name": "Add an application successfully",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns correct object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.job.id).to.eql(1);",
+									"    pm.expect(jsonData.coverLetter).to.eql(\"This is my cover letter for the job\");",
+									"    pm.expect(jsonData.customResume).to.eql(\"Link or content of the resume\");",
+									"    pm.expect(jsonData.job.manager.department).to.eql(\"Engineering\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"job\": {\n        \"id\": 1\n    },\n    \"candidate\": {\n        \"id\": 1\n    },\n    \"dateApplied\": \"2024-10-21\",\n    \"coverLetter\": \"This is my cover letter for the job\",\n    \"customResume\": \"Link or content of the resume\",\n    \"applicationStatus\": \"Pending\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/applications",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show the list of existed applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of applications\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(4);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\n    \"user\": {\n    \"id\": 1\n  },\n  \"fullName\": \"Jane Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"address\": \"123 Main St\",\n  \"phone\": \"1234567890\",\n  \"resume\": \"Link to resume or text content\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update an application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns correctly updated object data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.job.id).to.eql(1);",
+									"    pm.expect(jsonData.coverLetter).to.eql(\"Here's my new cover letter\");",
+									"    pm.expect(jsonData.customResume).to.eql(\"This is a new resume\");",
+									"    pm.expect(jsonData.job.manager.department).to.eql(\"Engineering\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"job\": {\n        \"id\": 1\n    },\n    \"candidate\": {\n        \"id\": 2\n    },\n    \"dateApplied\": \"2024-10-21\",\n    \"coverLetter\": \"Here's my new cover letter\",\n    \"customResume\": \"This is a new resume\",\n    \"applicationStatus\": \"Pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/applications/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"applications",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get application by manager id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of applications\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(4);",
+									"});",
+									"",
+									"pm.test(\"Returns expected application data\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].job.manager.id).to.eql(2);",
+									"    pm.expect(jsonData[0].job.listingTitle).to.eql(\"UI Designer\");",
+									"    pm.expect(jsonData[0].id).to.eql(1);",
+									"    pm.expect(jsonData[0].customResume).to.eql(\"Custom resume content for John.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/applications/manager/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"applications",
+								"manager",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get applications by job id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return correct number of applications\", function () {",
+									"    let data = pm.response.json()",
+									"    pm.expect(data.length).to.equal(3);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/applications/job/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"applications",
+								"job",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete an application by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/applications/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"applications",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Responds With Base Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body is correct\", function () {",
+							"    pm.response.to.have.body(\"This is the Talent-API!\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8081",
+			"type": "string"
+		}
+	]
+}
